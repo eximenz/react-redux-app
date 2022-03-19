@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { initiateStore } from "./store/store";
 import * as actions from "./store/actions";
 
-
 const store = initiateStore();
 
 const App = (params) => {
@@ -20,6 +19,11 @@ const App = (params) => {
     const changeTitle = (taskId) => {
         store.dispatch(actions.titleChanged(taskId));
     };
+
+    const deleteTask = (taskId) => {
+        store.dispatch(actions.taskDeleted(taskId));
+    };
+
     return (
         <>
             <h1>App</h1>
@@ -33,6 +37,9 @@ const App = (params) => {
                         </button>
                         <button onClick={() => changeTitle(el.id)}>
                             Change Title
+                        </button>
+                        <button onClick={() => deleteTask(el.id)}>
+                            Delete
                         </button>
                         <hr />
                     </li>
