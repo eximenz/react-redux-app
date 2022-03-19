@@ -1,43 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import { initiateStore } from "./store/store";
+import * as actions from "./store/actions";
 
-function createStore(initialState) {
-    let state = initialState;
 
-    function getState() {
-        return state;
-    }
-    function dispatch(action) {
-        if (action.type === "task/completed") {
-            const newArray = [...state];
-            const elementIndex = newArray.findIndex(
-                (el) => el.id === action.payload.id
-            );
-            newArray[elementIndex].completed = true;
-            state = newArray;
-            console.log(state);
-        }
-    }
-
-    return { getState, dispatch };
-}
-const store = createStore([{ id: 1, descriptiob: "Task 1", completed: false }]);
+const store = initiateStore();
 
 const App = (params) => {
-    console.log(store.getState());
+    const [state, setState] = useState(store.getState());
+
+    useEffect(() => {
+        store.subscribe(() => setState(store.getState()));
+    }, []);
+
+    const completeTask = (taskId) => {
+        store.dispatch(actions.taskCompleted(taskId));
+    };
+
+    const changeTitle = (taskId) => {
+        store.dispatch(actions.titleChanged(taskId));
+    };
     return (
         <>
             <h1>App</h1>
-            <button
-                onClick={() =>
-                    store.dispatch({
-                        type: "task/completed",
-                        payload: { id: 1 }
-                    })
-                }
-            >
-                Complete
-            </button>
+            <ul>
+                {state.map((el) => (
+                    <li key={el.id}>
+                        <p>{el.title}</p>
+                        <p>{`Completed: ${el.completed}`}</p>{" "}
+                        <button onClick={() => completeTask(el.id)}>
+                            Complete
+                        </button>
+                        <button onClick={() => changeTitle(el.id)}>
+                            Change Title
+                        </button>
+                        <hr />
+                    </li>
+                ))}
+            </ul>
         </>
     );
 };
