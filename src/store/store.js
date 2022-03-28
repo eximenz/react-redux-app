@@ -1,9 +1,19 @@
-import { createStore } from "redux";
+import { createStore, compose, applyMiddleware } from "redux";
 import taskReduser from "./task";
+import { logger } from "./middleware/logger";
+import { thunk } from "./middleware/thunk";
 
+const middlewareEnhancer = applyMiddleware(logger, thunk);
 
 function configureStore() {
-    return createStore(taskReduser);
+    return createStore(
+        taskReduser,
+        compose(
+            middlewareEnhancer,
+            window.__REDUX_DEVTOOLS_EXTENSION__ &&
+                window.__REDUX_DEVTOOLS_EXTENSION__()
+        )
+    );
 }
 
 export default configureStore;
