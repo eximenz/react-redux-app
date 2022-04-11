@@ -13,11 +13,11 @@ const errorSlice = createSlice({
     }
 });
 
-const { actions, reducer: errorReduser } = errorSlice;
+const { actions, reducer: errorReduсer } = errorSlice;
 
 const { set } = actions;
 export const setError = (message) => (dispatch) => {
     dispatch(set(message));
 };
 
-export default errorReduser;
+export default errorReduсer;

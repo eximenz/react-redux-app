@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import configureStore from "./store/store";
@@ -19,7 +19,7 @@ const App = (params) => {
 
     useEffect(() => {
         dispatch(getTasks());
-    }, []);
+    }, [dispatch]);
 
     // const completeTask = (taskId) => {
     //     dispatch((dispatch, getState) => {

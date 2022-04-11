@@ -1,8 +1,8 @@
-import { createAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import todosServise from "../services/todos.service";
 import { setError } from "./errors";
 
-const initialState = { entities: [], isLoading: true};
+const initialState = { entities: [], isLoading: true };
 
 // const update = createAction("task/updated");
 // const remove = createAction("task/remove");
@@ -25,7 +25,9 @@ const taskSlice = createSlice({
             };
         },
         remove(state, action) {
-            return state.entities.filter((el) => el.id !== action.payload.id);
+            state.entities = state.entities.filter(
+                (el) => el.id !== action.payload.id
+            );
         },
         taskRequested(state) {
             state.isLoading = true;
@@ -36,7 +38,7 @@ const taskSlice = createSlice({
     }
 });
 
-// const taskReduser = createReducer(initialState, (builder) => {
+// const taskReducer = createReducer(initialState, (builder) => {
 //     builder
 //         .addCase(update, (state, action) => {
 //             const elementIndex = state.findIndex(
@@ -52,7 +54,7 @@ const taskSlice = createSlice({
 //         });
 // });
 
-const { actions, reducer: taskReduser } = taskSlice;
+const { actions, reducer: taskReducer } = taskSlice;
 const { update, remove, recived, taskRequested, taskRequestFailed } = actions;
 
 export const getTasks = () => async (dispatch) => {
@@ -78,4 +80,4 @@ export function taskDeleted(id) {
     return remove({ id });
 }
 
-export default taskReduser;
+export default taskReducer;

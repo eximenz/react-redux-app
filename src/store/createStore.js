@@ -1,4 +1,4 @@
-export function createStore(reduser, initialState) {
+export function createStore(reducer, initialState) {
     let state = initialState;
     let listeners = [];
 
@@ -6,7 +6,7 @@ export function createStore(reduser, initialState) {
         return state;
     }
     function dispatch(action) {
-        state = reduser(state, action);
+        state = reducer(state, action);
         for (let i = 0; i < listeners.length; i++) {
             const listener = listeners[i];
             listener();
