@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import todosServise from "../services/todos.service";
+import { createAction, createSlice } from "@reduxjs/toolkit";
+import todosService from "../services/todos.service";
 import { setError } from "./errors";
 
 const initialState = { entities: [], isLoading: true };
@@ -29,39 +29,46 @@ const taskSlice = createSlice({
                 (el) => el.id !== action.payload.id
             );
         },
-        taskRequested(state) {
+        loadTaskRequested(state) {
             state.isLoading = true;
         },
         taskRequestFailed(state, action) {
             state.isLoading = false;
+        },
+        taskAdded(state, action) {
+            state.entities.push(action.payload);
         }
     }
 });
 
-// const taskReducer = createReducer(initialState, (builder) => {
-//     builder
-//         .addCase(update, (state, action) => {
-//             const elementIndex = state.findIndex(
-//                 (el) => el.id === action.payload.id
-//             );
-//             state[elementIndex] = {
-//                 ...state[elementIndex],
-//                 ...action.payload
-//             };
-//         })
-//         .addCase(remove, (state, action) => {
-//             return state.filter((el) => el.id !== action.payload.id);
-//         });
-// });
-
 const { actions, reducer: taskReducer } = taskSlice;
-const { update, remove, recived, taskRequested, taskRequestFailed } = actions;
+const {
+    update,
+    remove,
+    recived,
+    taskRequestFailed,
+    taskAdded,
+    loadTaskRequested
+} = actions;
+
+const taskRequested = createAction("task/taskRequested");
 
 export const loadTasks = () => async (dispatch) => {
+    dispatch(loadTaskRequested());
+    try {
+        const data = await todosService.fetch();
+        dispatch(recived(data));
+    } catch (error) {
+        dispatch(taskRequestFailed());
+        dispatch(setError(error.message));
+    }
+};
+
+export const createTask = (task) => async (dispatch) => {
     dispatch(taskRequested());
     try {
-        const data = await todosServise.fetch();
-        dispatch(recived(data));
+        const data = await todosService.create(task);
+        dispatch(taskAdded(data));
     } catch (error) {
         dispatch(taskRequestFailed());
         dispatch(setError(error.message));

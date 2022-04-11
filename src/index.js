@@ -9,7 +9,8 @@ import {
     completeTask,
     loadTasks,
     getTasks,
-    getTasksLoadingStatus
+    getTasksLoadingStatus,
+    createTask
 } from "./store/task";
 
 const store = configureStore();
@@ -31,6 +32,11 @@ const App = (params) => {
     //         dispatch(taskCompleted(taskId));
     //     });
     // };
+    const addNewTask = () => {
+        dispatch(
+            createTask({ userId: 1, title: "SomeNew Task", completed: false })
+        );
+    };
 
     const changeTitle = (taskId) => {
         dispatch(titleChanged(taskId));
@@ -50,6 +56,7 @@ const App = (params) => {
     return (
         <>
             <h1>App</h1>
+            <button onClick={() => addNewTask()}>Add task</button>
             <ul>
                 {state.map((el) => (
                     <li key={el.id}>
